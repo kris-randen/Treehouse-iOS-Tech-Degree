@@ -310,6 +310,13 @@ func draw(players: Players, forDrawNumber draw: Int, into nTeams: Int) -> Team
     
     let size = players.count / nTeams
     
+    // MARK: The main logic of draw is as follows:
+    //          1. We sort the players by decreasing order of height
+    //          2. We divide the players into 6 pools one for each player to be picked from
+    //          3. Draw i picks the  ith tallest for the first player and then the ist shortest for the second player and alternates across the pools
+    //          4. This is a greedy algorithmic approach where we're not sure if we'll hit the required delta for each possible input.
+    //          5. But by picking ith talles and the ith shortest alternatingly we can get pretty close to the average if the heights don't fluctuate too much.
+    
     for i in 0..<size
     {
         let index = (i % 2 == 0) ? ((i * nTeams) + draw - 1) : ((i * nTeams) + nTeams - draw)
@@ -358,6 +365,15 @@ func findAverageHeightFor(_ team: Team) -> Double
 let dragonsHeight = findAverageHeightFor(dragons)
 let sharksHeight = findAverageHeightFor(sharks)
 let raptorsHeight = findAverageHeightFor(raptors)
+
+func printAverageHeightsFor(_ teams: Teams)
+{
+    for (name, team) in teams
+    {
+        let height = String(format: "%.2f", findAverageHeightFor(team))
+        print("The average height of team \(name) is \(height)")
+    }
+}
 
 func experienceBalanceCheckFor(_ teams: Teams) -> Bool
 {
@@ -455,5 +471,16 @@ func createLettersToAllParentsFor(_ teams: Teams) -> Letters
 
 let letters = createLettersToAllParentsFor(teams)
 
-print(letters[RAPTORS]![raptors[5]]!)
+func printAllLetters(_ letters: Letters)
+{
+    for (name, teamLetters) in letters
+    {
+        for (player, letter) in letters[name]!
+        {
+            print("\(letter)\n\n")
+        }
+    }
+}
 
+printAllLetters(letters)
+printAverageHeightsFor(teams)
