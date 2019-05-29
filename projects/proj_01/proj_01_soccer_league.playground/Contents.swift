@@ -1,5 +1,9 @@
 import Foundation
 
+// MARK: typealiases server two nice purposes:
+//      1. They give more meaning to the type when spelling it out. Using Name instead of String immediately suggests to the reader that we're storing names as Strings.
+//      2. When we have the opportunity to write more generic code changing the type of an alias in the declaration percolates all through the code. This is a very useful feature. Let's say if we decide to change Height from Double to Int for some other problem we need to change it just in one place as long as all code is generic enough to handle both integer and double valued heights. Doing this gives us tremendous flexibiity for future development.
+
 typealias Name = String
 typealias Names = [Name]
 typealias Player = (name: Name, guardianName: Name, height: Height, isExperienced: Bool)
@@ -12,6 +16,12 @@ typealias Heights = [Height]
 typealias Letter = String
 typealias Letters = [Name: [Name: Letter]]
 
+
+/************************************************************************************************
+ 
+ PART I: Assimilating the provided input and creating datatypes to hold the players and teams.
+ 
+************************************************************************************************/
 
 let date = Date()
 let dateFormatter = DateFormatter()
@@ -260,6 +270,15 @@ let players = createPlayersFrom(names: namesOfPlayers, withGuardianNames: namesO
 
 let playerInformation = createPlayerInformationMapFor(players)
 
+
+/************************************************************************************************
+ 
+ PART II: Drawing players into three teams making sure that the experience and heigts are balanced.
+ 
+ ************************************************************************************************/
+
+
+
 func findNumberOfExperiencedPlayersFor(_ team: Team) -> Int
 {
     var n = 0
@@ -428,6 +447,14 @@ func heightBalanceCheckerFor(_ teams: Teams, withinTolerance tol: Height = 1.5) 
 
 let experienceIsBalanced = experienceBalanceCheckFor(teams)
 let heightIsBalanced = heightBalanceCheckerFor(teams)
+
+
+/************************************************************************************************
+ 
+ PART III: Creating customized letters for parents intimating them of the time for practice session.
+ 
+ ************************************************************************************************/
+
 
 func createLetterToParentFor(_ playerName: Name, inTeam teamName: Name) -> Letter
 {
