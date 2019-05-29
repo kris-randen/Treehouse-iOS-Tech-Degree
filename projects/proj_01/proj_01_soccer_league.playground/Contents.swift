@@ -2,7 +2,7 @@ import Foundation
 
 typealias Name = String
 typealias Names = [Name]
-typealias Player = (name: Name, guardianName: Name, height: Height, isExperienced: Bool, team: Name)
+typealias Player = (name: Name, guardianName: Name, height: Height, isExperienced: Bool)
 typealias Players = [Player]
 typealias PlayerInformation = [Name: Player]
 typealias Team = Names
@@ -235,7 +235,7 @@ func createPlayersFrom    (
     
     for i in 0..<names.count
     {
-        players.append((name: names[i], guardianName: guardianNames[i], height: heights[i], isExperienced: areExperienced[i], team: ""))
+        players.append((name: names[i], guardianName: guardianNames[i], height: heights[i], isExperienced: areExperienced[i]))
     }
     
    return playersSortedBy(players)
@@ -252,7 +252,11 @@ func createPlayerInformationMapFor(_ players: Players) -> PlayerInformation
     return playerInformation
 }
 
+// MARK: Player type is a tuple that holds the name, height, guardian name and experience values. This makes it easy to look up respective fields given a player.
+
 let players = createPlayersFrom(names: namesOfPlayers, withGuardianNames: namesOfGuardians, withHeights: heightOfPlayers, withSoccerExperience: experiencedSoccerPlayer, sortedBy: 3)
+
+// MARK: playerInformation is a dictionary that stores the player information as value for the player name as the key. This makes it easy to look up player information using names.
 
 let playerInformation = createPlayerInformationMapFor(players)
 
@@ -315,7 +319,8 @@ func draw(players: Players, forDrawNumber draw: Int, into nTeams: Int) -> Team
     //          2. We divide the players into 6 pools one for each player to be picked from
     //          3. Draw i picks the  ith tallest for the first player and then the ist shortest for the second player and alternates across the pools
     //          4. This is a greedy algorithmic approach where we're not sure if we'll hit the required delta for each possible input.
-    //          5. But by picking ith talles and the ith shortest alternatingly we can get pretty close to the average if the heights don't fluctuate too much.
+    //          5. But by picking ith tallest and the ith shortest alternatingly we can get pretty close to the average if the heights don't fluctuate too much.
+    //          6. Note we also separate the players into experienced and inexperienced so that we get balanced heights from both lots.
     
     for i in 0..<size
     {
@@ -326,17 +331,19 @@ func draw(players: Players, forDrawNumber draw: Int, into nTeams: Int) -> Team
     return team
 }
 
-let dragonsInexperienced    = draw(players: playersWithoutExperience, forDrawNumber: 1, into: 3)
-let sharksInexperienced     = draw(players: playersWithoutExperience, forDrawNumber: 2, into: 3)
-let raptorsInexperienced    = draw(players: playersWithoutExperience, forDrawNumber: 3, into: 3)
+let dragonsInexperienced    = draw(players: playersWithoutExperience, forDrawNumber: 1, into: TEAM_NAMES.count)
+let sharksInexperienced     = draw(players: playersWithoutExperience, forDrawNumber: 2, into: TEAM_NAMES.count)
+let raptorsInexperienced    = draw(players: playersWithoutExperience, forDrawNumber: 3, into: TEAM_NAMES.count)
 
-let dragonsExperienced      = draw(players: playersWithExperience, forDrawNumber: 2, into: 3)
-let sharksExperienced       = draw(players: playersWithExperience, forDrawNumber: 3, into: 3)
-let raptorsExperienced      = draw(players: playersWithExperience, forDrawNumber: 1, into: 3)
+let dragonsExperienced      = draw(players: playersWithExperience, forDrawNumber: 2, into: TEAM_NAMES.count)
+let sharksExperienced       = draw(players: playersWithExperience, forDrawNumber: 3, into: TEAM_NAMES.count)
+let raptorsExperienced      = draw(players: playersWithExperience, forDrawNumber: 1, into: TEAM_NAMES.count)
 
 let dragons                 = joinArray(first: dragonsInexperienced, and: dragonsExperienced)
 let sharks                  = joinArray(first: sharksInexperienced, and: sharksExperienced)
 let raptors                 = joinArray(first: raptorsInexperienced, and: raptorsExperienced)
+
+// MARK: Teams is a dictionary that holds the array of player names in the team as value for the team name as the key.
 
 var teams                   = Teams()
 
@@ -371,7 +378,7 @@ func printAverageHeightsFor(_ teams: Teams)
     for (name, team) in teams
     {
         let height = String(format: "%.2f", findAverageHeightFor(team))
-        print("The average height of team \(name) is \(height)")
+        print("    The average height of team \(name) is \(height)")
     }
 }
 
@@ -416,6 +423,8 @@ func heightBalanceCheckerFor(_ teams: Teams, withinTolerance tol: Height = 1.5) 
     
     return true
 }
+
+// MARK: The checks below are to ensure we're hitting the required balance while drawing the players into teams.
 
 let experienceIsBalanced = experienceBalanceCheckFor(teams)
 let heightIsBalanced = heightBalanceCheckerFor(teams)
