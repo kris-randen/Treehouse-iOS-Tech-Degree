@@ -503,9 +503,9 @@ let letters = createLettersToAllParentsFor(teams)
 
 func printAllLetters(_ letters: Letters)
 {
-    for (name, teamLetters) in letters
+    for (name, _) in letters
     {
-        for (player, letter) in letters[name]!
+        for (_, letter) in letters[name]!
         {
             print("\(letter)\n\n")
         }
