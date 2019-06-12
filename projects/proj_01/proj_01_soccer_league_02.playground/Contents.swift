@@ -222,13 +222,13 @@ func playersSortedBy(_ players: Players, by sortBy: Int = 0) -> Players
     return players
 }
 
-func createPlayersFrom    (
-                                        names: [String],
-                                        withGuardianNames guardianNames: [String],
-                                        withHeights heights: [Double],
-                                        withSoccerExperience areExperienced: [Bool],
-                                        sortedBy sortBy: Int = 0
-                                    ) -> [Player]
+func createPlayersFrom  (
+                            names: [String],
+                            withGuardianNames guardianNames: [String],
+                            withHeights heights: [Double],
+                            withSoccerExperience areExperienced: [Bool],
+                            sortedBy sortBy: Int = 0
+                        ) -> [Player]
 {
     if (names.count, guardianNames.count, heights.count, areExperienced.count) != (guardianNames.count, heights.count, areExperienced.count, names.count)
     {
